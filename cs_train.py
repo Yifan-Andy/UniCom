@@ -14,7 +14,7 @@ from early_stop import EarlyStopping, Stop_args
 from model import PretrainModel
 from lr import PolynomialDecayLR
 from utils import parse_args, load_query_train_n_gt, load_query_test_n_gt
-from prompt import GPF_plus
+from prompt import AdaptPrompt
 from subgraph import get_mean_features, get_kmeans_communities, get_modularity_communities
 from answering import AnsweringCrossAttention
 from head import HeadMLP
@@ -106,7 +106,7 @@ if __name__ == "__main__":
     head = HeadMLP(processed_features.shape[2], args.pretrain_dim).to(args.device)
     
     # prompt
-    prompt = GPF_plus(processed_features.shape[2], args.n_prompt).to(args.device)
+    prompt = AdaptPrompt(processed_features.shape[2], args.n_prompt).to(args.device)
     
     # answering
     answering = AnsweringCrossAttention(args.hidden_dim * 2).to(args.device)

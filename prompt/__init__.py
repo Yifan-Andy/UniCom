@@ -1,1 +1,1 @@
-from .GPF import GPF_plus
+from .adapt_prompt import AdaptPrompt
