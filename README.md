@@ -18,5 +18,5 @@ You can run our code by
 bash pretrain.sh
 
 # Adaptation and Fusion
-bash search.sh
+bash adapt.sh
 ```
