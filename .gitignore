@@ -1,4 +1,5 @@
 /logs/
 /checkpoints/
+/__pycache__/
 /dataset/dblp_pyg.pt
-/dataset/dblp_computers.pt
+/dataset/computers_pyg.pt
