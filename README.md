@@ -12,6 +12,11 @@ scipy==1.11.2
 ```
 
 ## How to Run
+Download datasets
+```
+python3 dataset/*_download_pyg.py
+```
+
 You can run our code by
 ```
 # Pre-training
