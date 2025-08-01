@@ -31,10 +31,9 @@ if __name__ == "__main__":
     if not os.path.exists(f"checkpoints/processed_features/{args.dataset}.pt"):
         start_feature_processing = time.time()
         processed_features = utils.re_features(adj, features, args.hops)        # [N, hops+1, d]
-        if processed_features.shape[0] < 10000:
-            indicator = utils.conductance_hop(adj, args.hops)                   # [N, hops+1]
-            indicator = indicator.unsqueeze(2).repeat(1, 1, features.shape[1])
-            processed_features = processed_features * indicator
+        indicator = utils.conductance_hop(adj, args.hops)                   # [N, hops+1]
+        indicator = indicator.unsqueeze(2).repeat(1, 1, features.shape[1])
+        processed_features = processed_features * indicator
         torch.save(processed_features, f"checkpoints/processed_features/{args.dataset}.pt")
     else:
         processed_features = torch.load(f"checkpoints/processed_features/{args.dataset}.pt")
@@ -115,9 +114,7 @@ if __name__ == "__main__":
         if early_stopping.simple_check(loss_train_b):
             break
 
-        print('Epoch: {:04d}'.format(epoch+1),
-        'loss_train: {:.4f}'.format(loss_train.item()))
-        # 'loss_train: {:.4f}'.format(np.mean(np.array(loss_train_b)))
+        print('Epoch: {:04d}'.format(epoch+1), 'loss_train: {:.4f}'.format(loss_train.item()))
     
     print("Optimization Finished!")
     print("Train time: {:.4f}s".format(time.time() - t_start + t_feature_precessing))
@@ -127,8 +124,5 @@ if __name__ == "__main__":
 
     if not os.path.exists(args.save_path):
         os.makedirs(args.save_path)
-    
-    if not os.path.exists(args.embedding_path):
-        os.makedirs(args.embedding_path)
 
     torch.save(model.state_dict(), args.save_path + args.dataset + '.pth')

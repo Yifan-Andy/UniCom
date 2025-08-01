@@ -63,11 +63,10 @@ if __name__ == "__main__":
     # process feature
     start_feature_processing = time.time()
     if not os.path.exists(f"checkpoints/processed_features/{args.dataset}.pt"):
-        processed_features = utils.re_features(adj, features, args.hops)  # return (N, hops+1, d)
-        if processed_features.shape[0] < 10000:
-            indicator = utils.conductance_hop(adj, args.hops) # return (N, hops+1)
-            indicator = indicator.unsqueeze(2).repeat(1, 1, features.shape[1])
-            processed_features = processed_features * indicator
+        processed_features = utils.re_features(adj, features, args.hops)        # (N, hops+1, d)
+        indicator = utils.conductance_hop(adj, args.hops)                       # (N, hops+1)
+        indicator = indicator.unsqueeze(2).repeat(1, 1, features.shape[1])
+        processed_features = processed_features * indicator
         torch.save(processed_features, f"checkpoints/processed_features/{args.dataset}.pt")
         print("feature saved")
     else:
@@ -85,11 +84,10 @@ if __name__ == "__main__":
         processed_features = torch.cat([processed_features, kmeans_features], dim=1)
         args.hops += 1
         # ============================== Use Modularity to generate cohesive prompt ============================
-        if num_nodes < 50000:
-            modularity_communities = get_modularity_communities(adj)
-            modularity_features = get_mean_features(features, modularity_communities).unsqueeze(1)
-            processed_features = torch.cat([processed_features, modularity_features], dim=1)
-            args.hops += 1
+        modularity_communities = get_modularity_communities(adj)
+        modularity_features = get_mean_features(features, modularity_communities).unsqueeze(1)
+        processed_features = torch.cat([processed_features, modularity_features], dim=1)
+        args.hops += 1
         # ===================================================================================================================
         print(f"Final processed feature shape {processed_features.shape}")
 
