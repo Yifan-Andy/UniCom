@@ -117,7 +117,7 @@ if __name__ == "__main__":
         print('Epoch: {:04d}'.format(epoch+1), 'loss_train: {:.4f}'.format(loss_train.item()))
     
     print("Optimization Finished!")
-    print("Train time: {:.4f}s".format(time.time() - t_start + t_feature_precessing))
+    print("Train time: {:.4f}s".format(time.time() - t_start))
 
     # model save
     print(f"Save Model to {args.save_path + args.dataset + '.pth'}")

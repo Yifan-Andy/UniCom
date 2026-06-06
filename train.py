@@ -6,39 +6,17 @@ import numpy as np
 import torch
 import torch.nn.functional as F
 import torch.utils.data as Data
-from sklearn.cluster import KMeans
-from sklearn.metrics import f1_score, normalized_mutual_info_score, adjusted_rand_score, jaccard_score, accuracy_score
 
 from data_loader import get_dataset
 from early_stop import EarlyStopping, Stop_args
 from model import PretrainModel
 from lr import PolynomialDecayLR
-from utils import parse_args, load_query_train_n_gt, load_query_test_n_gt
+from utils import parse_args, load_query_train_n_gt, load_query_test_n_gt, extract_representative_nodes
 from prompt import AdaptPrompt
 from subgraph import get_mean_features, get_kmeans_communities, get_modularity_communities
 from answering import AnsweringCrossAttention
 from head import HeadMLP
 from loss import CMMDLoss
-
-def extract_representative_nodes(features: torch.Tensor, num_representatives: int = 10):
-    # change numpy
-    features_np = features.detach().cpu().numpy()
-
-    # KMeans clustering
-    kmeans = KMeans(n_clusters=num_representatives, random_state=42, n_init='auto').fit(features_np)
-    centers = kmeans.cluster_centers_
-    labels = kmeans.labels_
-
-    # center nodes
-    representative_indices = []
-    for i in range(num_representatives):
-        cluster_indices = np.where(labels == i)[0]
-        cluster_points = features_np[cluster_indices]
-        distances = np.linalg.norm(cluster_points - centers[i], axis=1)
-        closest_index = cluster_indices[np.argmin(distances)]
-        representative_indices.append(int(closest_index))
-
-    return representative_indices
 
 if __name__ == "__main__":
     args = parse_args()

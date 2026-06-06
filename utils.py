@@ -8,6 +8,7 @@ import networkx as nx
 from numpy import *
 import random
 import warnings
+from sklearn.cluster import KMeans
 from sklearn.metrics import normalized_mutual_info_score, adjusted_rand_score, jaccard_score
 
 # Training settings
@@ -410,6 +411,26 @@ def MaxMinNormalization(x, Min, Max):
     x = [(item-x_min)*(Max-Min)/(x_max - x_min) + Min for item in x]
 
     return x
+
+def extract_representative_nodes(features: torch.Tensor, num_representatives: int = 10):
+    # change numpy
+    features_np = features.detach().cpu().numpy()
+
+    # KMeans clustering
+    kmeans = KMeans(n_clusters=num_representatives, random_state=42, n_init='auto').fit(features_np)
+    centers = kmeans.cluster_centers_
+    labels = kmeans.labels_
+
+    # center nodes
+    representative_indices = []
+    for i in range(num_representatives):
+        cluster_indices = np.where(labels == i)[0]
+        cluster_points = features_np[cluster_indices]
+        distances = np.linalg.norm(cluster_points - centers[i], axis=1)
+        closest_index = cluster_indices[np.argmin(distances)]
+        representative_indices.append(int(closest_index))
+
+    return representative_indices
 
 def overlapping_nmi(X, Y):
     """Compute NMI between two overlapping community covers.

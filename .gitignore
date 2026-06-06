@@ -1,5 +1,7 @@
 /logs/
 /checkpoints/
 /__pycache__/
+/dataset/wikics_pyg.pt
+/dataset/cocs_pyg.pt
 /dataset/dblp_pyg.pt
 /dataset/computers_pyg.pt

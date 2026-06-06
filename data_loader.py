@@ -43,7 +43,8 @@ def get_dataset_svd(dataset, pe_dim):
     if dataset in {
         "texas", "cornell", "wisconsin",
         "cora", "citeseer", "pubmed",
-        "dblp", "reddit",
+        "dblp", "reddit", "products", "cocs",
+        "computers", "instagram", "photo", "wikics",
         "fb0", "fb107", "fb348", "fb1912", "fb1684"
     }:
         # Load the dataset file
@@ -53,7 +54,7 @@ def get_dataset_svd(dataset, pe_dim):
         # Extract adjacency matrix and node features
         adj = data_list[0]
         features = data_list[1]
-        svd = TruncatedSVD(n_components=500)
+        svd = TruncatedSVD(n_components=2000)
         features = torch.tensor(svd.fit_transform(features))
 
         # Convert PyTorch sparse adjacency to SciPy sparse matrix

@@ -18,9 +18,13 @@ You can run our code by
 # Download dataset for both stages
 python3 dataset/*_download_pyg.py
 
+# Generate train and test data
+python3 dataset/*/*_data_query.py
+python3 dataset/*/*_data_train_idx.py
+
 # Pre-training
 bash pretrain.sh
 
-# Adaptation and Fusion
+# Adaptation and fusion
 bash adapt.sh
 ```
